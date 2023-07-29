@@ -1,13 +1,285 @@
 <html>
     <head> 
-        <title>Find a network</title>
-        <script>
+        <title>Choose a network</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>
 
+            * {
+                padding: 0px;
+                margin: 0px;
+                list-style-type: none;     
+                box-sizing: border-box;       
+            }
+
+            h1{
+                font-size: 1.4em;
+            }
+
+            h2{
+                font-size: 1em;
+            }
+
+            a, .u-link{
+                color: blue;   
+                text-decoration: underline;             
+            }
+
+            a:hover{
+                text-decoration: none;
+            }
+
+            html, body{
+                line-height: 1.2;
+                font-family: sans-serif;  
+                height: 100vh;
+                width: 100%;    
+                background-color: whitesmoke;          
+            }
+
+            .form {
+                display: flex;
+                justify-content: center;
+                align-items: center;                
+            }
+
+            .container{
+                max-width: 600px;
+                width: 600px;
+                margin: 20px;                
+                background-color: white;  
+                border: solid 1px #ccc;
+                position: relative;
+                overflow: hidden;
+                border-radius: 8px; 
+                padding-bottom: 20px;                            
+            }
+            .container__row{
+                margin: 20px;
+                margin-bottom: 0px;
+            }
+         
+            .form__footer {
+                background: #ccc;
+                padding: 10px 20px;                
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+                text-align: right;
+            }
+            .form__fields{
+                
+            }
+            .form__fields__login input{
+                display: block;
+                width: 100%;
+                padding: 6px 18px;
+                border: 0;
+                font-size: 1.2em;                
+            }
+            .form__fields__login__field{
+                display: flex;
+                border: solid 1px #ccc;
+                position: relative;
+                border-radius: 4px;
+                overflow: hidden;
+            }
+            .form__fields__login__field:last-child{
+                margin-top: 10px;
+            }
+            .form__fields__login__field__label{
+                display: flex;
+                width: 100px;
+                min-width: 100px;
+                background: #ccc;    
+                justify-content: left;
+                align-items: center;  
+                padding-left: 10px;                          
+            }
+
+            .button {
+                padding: 6px 18px;
+            }  
+
+            .flash{
+                background-color: whitesmoke;
+                border: solid 1px #ccc;
+                position: relative;
+                border-radius: 4px;
+                overflow: hidden;
+                padding: 10px;
+            }
             
-        </script>
+            .js-hide{
+                display: none;
+            }
+
+            table{
+                width: 100%;  
+                border-collapse: collapse;   
+                border-top: solid 1px #ccc;           
+            }
+
+            table tr{
+                cursor: pointer;
+                
+            }
+
+            .td{                
+                border-bottom: solid 1px #ccc;
+                position: relative;
+                width: 10%;
+                line-height: 34px;
+                text-align: center;
+            }
+            .td--first{
+                width: 80%;
+                text-align: left;
+            }            
+            
+            .u-elipsis{   
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0px;
+                top: 0px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .u-disable{
+                opacity: .2;
+            }
+
+            .u-disable input{
+                pointer-events: none;
+            }
+            
+        </style>
+        
     </head>
     <body>
+        <form class="form" method="post" action="/post">
+            <div class="container">
 
+                <h1 class="container__row">Choose a network</h1>
 
+                <p class="container__row">Enter an SSID or choose from the list.</p>
+
+                <div class="container__row form__fields">
+                    <div class="form__fields__login">
+                        <div class="form__fields__login__field">
+                            <label class="form__fields__login__field__label" for="">SSID</label>
+                            <input type="text" name="SSID" id="js-input-ssid" />
+                        </div>
+                        <div class="form__fields__login__field">
+                            <label class="form__fields__login__field__label" for="" id="js-input-password">Password</label>
+                            <input type="password" name="pwd" id="js-input-password-field" />
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="container__row">Available networks</h2>
+
+                <div id="js-flash" class="container__row flash">No networks can be found.</div>
+
+                <div class="container__row table">
+                    <table id="js-table"></table>                
+                </div>
+
+            </div>
+
+            <div class="form__footer">
+                <input type="button" class="button" value="Submit">
+            </div>
+        
+        </form>
+
+        <!-- add JSON here (!ensure no whitespace before or after string) -->
+            <script type="application/json" id="js-data">{ "networks":
+                [
+                  {"ssid":"iPhone","rssi":-36, "enc":7},
+                  {"ssid":"AndroidAP2F2C AndroidAP2F2C AndroidAP2F2C","rssi":-51,"enc":7},
+                  {"ssid":"BTWi-fi","rssi":-74,"enc":0},
+                  {"ssid":"BTBHub6-9CP6","rssi":-75,"enc":3}
+                ]
+              }</script> 
+        <!-- / add JSON here -->
+
+        <script>
+            (function(){
+
+                const networks = JSON.parse(document.getElementById('js-data').innerHTML).networks
+                const flash = document.getElementById('js-flash')
+                const table = document.getElementById('js-table')
+                const ssid_input = document.getElementById('js-input-ssid')
+                const password_input = document.getElementById('js-input-password')
+                const password_input_field = document.getElementById('js-input-password-field')
+
+                let contains_user_input = true
+
+                let strength_to_text = function(strength){
+                    let s = Math.abs(strength)
+
+                    if(s < 50){
+                        return "&#128992;" 
+                    }
+
+                    return "&#128994;"
+                }
+
+                ssid_input.addEventListener('focus', () => {
+                    if(!contains_user_input){
+                        ssid_input.value = ''
+                    }
+
+                    password_input.classList.remove('u-disable')
+                    password_input_field.disabled = false
+                    
+                    contains_user_input = true
+
+                })
+
+                if(networks.length >= 0){
+                    flash.classList.add('js-hide')
+                    for(let i=0; i < networks.length; i++){
+                        let tr = document.createElement('tr')
+
+                        tr.innerHTML = `
+                            <td class="td">${ strength_to_text(networks[i].rssi) }</td>
+                            <td class="td td--first">
+                                <span class="u-elipsis u-link">${ networks[i].ssid }</span></td>                            
+                            <td class="td">${ networks[i].enc > 0 ? '&#128274;' : '' }</td>
+                        `
+
+                        tr.title = networks[i].ssid
+
+                        tr.addEventListener('click', (e) => {    
+
+                            let tr = e.target.closest('tr')                            
+                            let index = Array.prototype.indexOf.call(tr.parentElement.children, tr) 
+                            
+                            ssid_input.value = networks[index].ssid
+
+                            if(networks[index].enc == 0){
+                                password_input.classList.add('u-disable')
+                                password_input_field.disabled = true
+                            } else {
+                                password_input.classList.remove('u-disable')
+                                password_input_field.disabled = false
+                            }
+
+                            contains_user_input = false
+                            
+                        })
+
+                        table.append(tr)
+
+                    }
+                }
+                            
+            })();
+        </script>
     </body>
 </html>
