@@ -184,7 +184,7 @@
 
                 <div id="js-flash" class="container__row flash">No networks can be found.</div>
 
-                <div class="container__row table">
+                <div id="js-table-container" class="container__row table">
                     <table id="js-table"></table>                
                 </div>
 
@@ -199,10 +199,10 @@
         <!-- add JSON here (!ensure no whitespace before or after string) -->
             <script type="application/json" id="js-data">{ "networks":
                 [
-                  {"ssid":"iPhone","rssi":-36, "enc":7},
-                  {"ssid":"AndroidAP2F2C AndroidAP2F2C AndroidAP2F2C","rssi":-51,"enc":7},
-                  {"ssid":"BTWi-fi","rssi":-74,"enc":0},
-                  {"ssid":"BTBHub6-9CP6","rssi":-75,"enc":3}
+                    {"ssid":"iPhone","rssi":-36, "enc":7},
+                    {"ssid":"AndroidAP2F2C AndroidAP2F2C AndroidAP2F2C","rssi":-51,"enc":7},
+                    {"ssid":"BTWi-fi","rssi":-74,"enc":0},
+                    {"ssid":"BTBHub6-9CP6","rssi":-75,"enc":3}
                 ]
               }</script> 
         <!-- / add JSON here -->
@@ -216,6 +216,7 @@
                 const ssid_input = document.getElementById('js-input-ssid')
                 const password_input = document.getElementById('js-input-password')
                 const password_input_field = document.getElementById('js-input-password-field')
+                const table_container = document.getElementById('js-table-container')
 
                 let contains_user_input = true
 
@@ -241,7 +242,7 @@
 
                 })
 
-                if(networks.length >= 0){
+                if(networks.length > 0){
                     flash.classList.add('js-hide')
                     for(let i=0; i < networks.length; i++){
                         let tr = document.createElement('tr')
@@ -278,6 +279,8 @@
                         table.append(tr)
 
                     }
+                } else {
+                    table_container.classList.add('js-hide')
                 }
                             
             })();
