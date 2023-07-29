@@ -266,10 +266,10 @@
                             if(networks[index].enc == 0){
                                 password_input.classList.add('u-disable')
                                 password_input_field.disabled = true
+                                password_input_field.value = ''
                             } else {
                                 password_input.classList.remove('u-disable')
-                                password_input_field.disabled = false
-                                password_input_field.value = ''
+                                password_input_field.disabled = false                                
                             }
 
                             contains_user_input = false
