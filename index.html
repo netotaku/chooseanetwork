@@ -29,7 +29,7 @@
             }
 
             html, body{
-                line-height: 1.2;
+                line-height: 1.4;
                 font-family: sans-serif;  
                 height: 100vh;
                 width: 100%;    
@@ -107,7 +107,7 @@
                 position: relative;
                 border-radius: 4px;
                 overflow: hidden;
-                padding: 10px;
+                padding: 20px;
             }
             
             .js-hide{
@@ -155,6 +155,32 @@
             .u-disable input{
                 pointer-events: none;
             }
+
+            .thead{
+                display: block;
+                position: relative;
+            }
+
+            .refresh{
+                display: block;
+                position: absolute;
+                right: 0px;
+                top: 5px;                
+            }
+
+            .refresh a{
+
+                color: #333;
+                font-size: 2em;
+                text-decoration: none;
+                font-weight: normal;
+                line-height: 0;
+
+            }
+
+            .refresh a:hover{
+                color: red;
+            }
             
         </style>
         
@@ -163,9 +189,11 @@
         <form class="form" method="post" action="/post">
             <div class="container">
 
-                <h1 class="container__row">Choose a network</h1>
-
-                <p class="container__row">Enter an SSID or choose from the list.</p>
+                <h1 class="container__row">VELOCIDRONE UDP ADAPTOR</h1>
+                
+                <p class="container__row flash">
+                    Enter an SSID or select from the list the same<br>network that the Simulator is running on.<br><br>
+                    You also need to select <b>UDP</b> Input in the Simulator in <br><b>'Options/Game'</b> settings</p>
 
                 <div class="container__row form__fields">
                     <div class="form__fields__login">
@@ -180,7 +208,16 @@
                     </div>
                 </div>
 
-                <h2 class="container__row">Available networks</h2>
+                <div class="container__row">
+                    <input type="button" class="button" value="Submit">
+                </div>
+
+                <h2 class="container__row thead">
+                    <span>Available networks</span>
+                    <span class="refresh">
+                        <a title="Refresh Network List" href="...[ swap out for refresh url ]...">&#8634;</a>
+                    </span>
+                </h2>
 
                 <div id="js-flash" class="container__row flash">No networks can be found.</div>
 
@@ -188,12 +225,12 @@
                     <table id="js-table"></table>                
                 </div>
 
+                <div class="container__row">
+                    <a target="_blank" href="https://www.velocidrone.com">https://www.velocidrone.com</a>
+                </div>
+
             </div>
 
-            <div class="form__footer">
-                <input type="button" class="button" value="Submit">
-            </div>
-        
         </form>
 
         <!-- add JSON here (!ensure no whitespace before or after string) -->
